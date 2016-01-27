@@ -66,6 +66,16 @@ def get_grade_by_github_title(github, title):
     row = db_cursor.fetchone()
     print "%s's grade for %s is %s" % (row[1], row[2], row[0])
 
+def get_grades_by_github(github):
+    """Print all grades for a student"""
+    QUERY = """
+        SELECT *
+        FROM grades
+        WHERE student_github = :github
+        """
+    db_cursor = db.session.execute(QUERY, {'github':github})
+    rows = db_cursor.fetchall()
+    print rows
 
 def assign_grade(github, title, grade):
     """Assign a student a grade on an assignment and print a confirmation."""
@@ -110,6 +120,10 @@ def handle_input():
         elif command == "assign_grade":
             github, title, grade = args
             assign_grade(github, title, grade)
+
+        elif command == "get_grades":
+            github = args[0]
+            get_grades_by_github(github)
 
         else:
             if command != "quit":
